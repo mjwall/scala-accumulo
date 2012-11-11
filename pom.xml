@@ -80,6 +80,13 @@
           </includes>
         </configuration>
       </plugin>
+      <plugin>
+        <!-- mvn install from https://github.com/ueshin/ensime-maven-plugin
+             if you want to use it -->
+        <groupId>st.happy_camper.maven.plugins</groupId>
+        <artifactId>ensime-maven-plugin</artifactId>
+        <version>0.0.1</version>
+      </plugin>
     </plugins>
   </build>
 </project>

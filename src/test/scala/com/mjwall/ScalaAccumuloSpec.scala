@@ -9,12 +9,27 @@ import org.scalatest.matchers.ShouldMatchers
 class ScalaAccumuloSpec extends FunSpec with ShouldMatchers {
 
   describe("ScalaAccumulo") {
-    it ("should not be empty with no constructor args") {
-      ScalaAccumulo should not be (Nil)
+    describe("constructed with empty args") {
+
+      it("should be valid") {
+        ScalaAccumulo()
+      }
+
+      it("should not have a Connector") {
+        (pending)
+      }
     }
 
-    it ("should not be empty with zookeeper, instance, username and password args") {
-      ScalaAccumulo("zookeeper","instance","username","password") should not be empty
+    describe("constructed with zookeeper, instance, username and password") {
+
+      it("should be valid") {
+        val zk = "zookeeperhere"
+        ScalaAccumulo(zk,"i", "u","p").zookeepers should equal (zk)
+      }
+
+      it("should have a Connector") {
+        (pending)
+      }
     }
   }
 }

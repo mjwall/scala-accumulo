@@ -1,0 +1,8 @@
+Scala-Accumulo
+==============
+
+This is a work in progress, making a Scala wrapper for Accumulo.  Beside providing convience methods for working with Accumulo, the intent is to return Scala collections from a query.
+
+Although most of the Scala world uses SBT, I am attempting to do this with Maven.  I would imagine that most of the people using Accumulo are comfortable with Maven and I fear using SBT would hinder any possible use.
+
+Lots more to be done here, but it is a start.

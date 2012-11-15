@@ -13,6 +13,7 @@
     <maven.compiler.target>1.6</maven.compiler.target>
     <encoding>UTF-8</encoding>
     <scala.version>2.9.2</scala.version>
+    <!--scalamock.version>2.4</scalamock.version-->
     <accumulo.version>1.4.1</accumulo.version>
     <hadoop.version>0.20.203.0</hadoop.version>
     <zookeeper.version>3.3.3</zookeeper.version>
@@ -70,6 +71,12 @@
       <groupId>org.scalatest</groupId>
       <artifactId>scalatest_${scala.version}</artifactId>
       <version>2.0.M3</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>1.9.5</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

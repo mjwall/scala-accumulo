@@ -150,6 +150,8 @@
         "/Users/mwall/.m2/repository/junit/junit/4.9/junit-4.9.jar"
         "/Users/mwall/.m2/repository/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar"
         "/Users/mwall/.m2/repository/org/scalatest/scalatest_2.9.2/2.0.M3/scalatest_2.9.2-2.0.M3.jar"
+        "/Users/mwall/.m2/repository/org/mockito/mockito-core/1.9.5/mockito-core-1.9.5.jar"
+        "/Users/mwall/.m2/repository/org/objenesis/objenesis/1.0/objenesis-1.0.jar"
         "/Users/mwall/Desktop/scala-accumulo/target/classes"
         "/Users/mwall/Desktop/scala-accumulo/target/test-classes")
      :source-roots

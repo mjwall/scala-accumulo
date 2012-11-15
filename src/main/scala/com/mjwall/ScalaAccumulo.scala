@@ -48,6 +48,15 @@ object ScalaAccumulo {
     }
   }
 
+  def isSocketOpen(host: String, port: Int): Boolean = {
+    try {
+      new java.net.Socket(host, port)
+      true
+    } catch {
+      case e: Exception => false
+    }
+  }
+
   def parseZookeepers(zookeepers: String): List[ZookeeperPair] = {
     if ((null == zookeepers) || (zookeepers == "")) List()
     else {
@@ -59,15 +68,6 @@ object ScalaAccumulo {
     }
   }
 
-  private def isSocketOpen(host: String, port: Int): Boolean = {
-    try {
-      new java.net.Socket(host, port)
-      true
-    } catch {
-      case e: Exception => false
-    }
-  }
-
   /*
    * Helper method to return a Mock Accumulo instance
    */
@@ -75,7 +75,6 @@ object ScalaAccumulo {
     new ScalaAccumulo(new org.apache.accumulo.core.client.mock.MockInstance(),"root","secret")
   }
 }
-
 
 
 

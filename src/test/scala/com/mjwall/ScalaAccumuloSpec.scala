@@ -4,9 +4,11 @@ import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 import org.scalatest.FunSpec
 import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.mock.MockitoSugar
+import org.mockito.Mockito._
 
 @RunWith(classOf[JUnitRunner])
-class ScalaAccumuloSpec extends FunSpec with ShouldMatchers {
+class ScalaAccumuloSpec extends FunSpec with ShouldMatchers with MockitoSugar {
 
   describe("ScalaAccumulo") {
     describe("parseZookeepers") {
@@ -119,8 +121,16 @@ class ScalaAccumuloSpec extends FunSpec with ShouldMatchers {
    }
 
    describe("when the zookeeper connection fails") {
-     // TODO: need to figure out the best way to mock one of the companion methods
-     it("should give you a nice message")(pending)
+     it("should give you a nice message") {
+       val zkHost = "300.300.300.300" //hopefully this IP doesn't exist
+       try {
+         val scalaAccumulo = new ScalaAccumulo("inointance",zkHost,"root","secret")
+       } catch {
+         case e : java.net.SocketException => {
+           e.getMessage should equal ("Can't connect to zookeepers with string: " + zkHost)
+         }
+       }
+     }
    }
   }
 }

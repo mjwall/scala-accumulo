@@ -13,7 +13,6 @@
     <maven.compiler.target>1.6</maven.compiler.target>
     <encoding>UTF-8</encoding>
     <scala.version>2.9.2</scala.version>
-    <!--scalamock.version>2.4</scalamock.version-->
     <accumulo.version>1.4.1</accumulo.version>
     <hadoop.version>0.20.203.0</hadoop.version>
     <zookeeper.version>3.3.3</zookeeper.version>

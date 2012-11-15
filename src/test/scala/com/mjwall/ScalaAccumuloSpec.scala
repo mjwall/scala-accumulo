@@ -4,11 +4,9 @@ import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 import org.scalatest.FunSpec
 import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.mock.MockitoSugar
-import org.mockito.Mockito._
 
 @RunWith(classOf[JUnitRunner])
-class ScalaAccumuloSpec extends FunSpec with ShouldMatchers with MockitoSugar {
+class ScalaAccumuloSpec extends FunSpec with ShouldMatchers {
 
   describe("ScalaAccumulo") {
     describe("parseZookeepers") {
@@ -118,20 +116,27 @@ class ScalaAccumuloSpec extends FunSpec with ShouldMatchers with MockitoSugar {
           it("can not be run, as Accumulo doesn't appear to be running") (pending)
         }
       }
-   }
+    }
 
-   describe("when the zookeeper connection fails") {
-     it("should give you a nice message") {
-       val zkHost = "300.300.300.300" //hopefully this IP doesn't exist
-       try {
-         val scalaAccumulo = new ScalaAccumulo("inointance",zkHost,"root","secret")
-       } catch {
-         case e : java.net.SocketException => {
-           e.getMessage should equal ("Can't connect to zookeepers with string: " + zkHost)
-         }
-       }
-     }
-   }
+    describe("when the zookeeper connection fails") {
+      it("should give you a nice message") {
+        val zkHost = "300.300.300.300" //hopefully this IP doesn't exist
+        try {
+          val scalaAccumulo = new ScalaAccumulo("inointance",zkHost,"root","secret")
+        } catch {
+          case e : java.net.SocketException => {
+            e.getMessage should equal ("Can't connect to zookeepers with string: " + zkHost)
+          }
+        }
+      }
+    }
+
+    describe("getMock") {
+      it("should return a mock Accumulo instance") {
+        val mockAccumulo = ScalaAccumulo.getMock
+        mockAccumulo.getInstance.isInstanceOf[org.apache.accumulo.core.client.mock.MockInstance] should be (true)
+      }
+    }
   }
 }
 

@@ -1,10 +1,10 @@
-package com.mjwall
+package com.mjwall.scala
 
 import org.apache.accumulo.core.client.Instance
 import org.apache.accumulo.core.client.ZooKeeperInstance
 import org.apache.accumulo.core.client.Connector
 
-class ScalaAccumulo(instance: Instance, username: String, password: String) {
+class Accumulo(instance: Instance, username: String, password: String) {
 
   val this.instance: Instance = instance //ZooKeeperInstance
   val this.username: String = username
@@ -22,7 +22,7 @@ class ScalaAccumulo(instance: Instance, username: String, password: String) {
    *
    */
   def this(instanceName: String, zookeepers: String, username: String, password: String) = {
-    this(ScalaAccumulo.getZooKeeperInstance(instanceName, zookeepers, new ZKChecker()), username, password)
+    this(Accumulo.getZooKeeperInstance(instanceName, zookeepers, new ZKChecker()), username, password)
   }
 
   /**
@@ -30,7 +30,7 @@ class ScalaAccumulo(instance: Instance, username: String, password: String) {
    * are running on localhost:2181 and the username/password is root/secret.
    */
   def this() = {
-    this(ScalaAccumulo.getZooKeeperInstance("accumulo","localhost", new ZKChecker()),"root","secret")
+    this(Accumulo.getZooKeeperInstance("accumulo","localhost", new ZKChecker()),"root","secret")
   }
 
   /*
@@ -40,7 +40,7 @@ class ScalaAccumulo(instance: Instance, username: String, password: String) {
    * constructor that takes instanceName, zookeepers, username and password
    */
   def this(instanceName: String, zookeepers: String, username: String, password: String, zkChecker: ZKChecker) = {
-    this(ScalaAccumulo.getZooKeeperInstance(instanceName, zookeepers, zkChecker), username, password)
+    this(Accumulo.getZooKeeperInstance(instanceName, zookeepers, zkChecker), username, password)
   }
 
   /**
@@ -49,7 +49,7 @@ class ScalaAccumulo(instance: Instance, username: String, password: String) {
    * is root/secret.  Most people will want to use the empty constructor
    */
   def this(zkChecker: ZKChecker) = {
-    this(ScalaAccumulo.getZooKeeperInstance("accumulo","localhost", zkChecker),"root","secret")
+    this(Accumulo.getZooKeeperInstance("accumulo","localhost", zkChecker),"root","secret")
   }
 
   def createTable(tableName: String) = {
@@ -64,7 +64,7 @@ class ScalaAccumulo(instance: Instance, username: String, password: String) {
 
 }
 
-object ScalaAccumulo {
+object Accumulo {
   /**
    * This method checks that at least one of the zookeeper connections is open before trying to
    * get Accumulo's ZooKeeperInstance.  Trying to get a ZooKeeperInstance without checking will
@@ -102,7 +102,7 @@ object ScalaAccumulo {
    * Helper method to return a Mock Accumulo instance
    */
   def getMock() = {
-    new ScalaAccumulo(new org.apache.accumulo.core.client.mock.MockInstance(),"root","secret")
+    new Accumulo(new org.apache.accumulo.core.client.mock.MockInstance(),"root","secret")
   }
 }
 

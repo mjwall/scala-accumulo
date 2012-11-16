@@ -157,6 +157,6 @@ class Table(accumulo: Accumulo, name: String) {
 
   def find() = {
     import scala.collection.JavaConversions._
-    asScalaIterator(getAccumulo.getConnector.createScanner(getName, new org.apache.accumulo.core.security.Authorizations()).iterator)
+    asScalaIterator(getAccumulo.getConnector.createScanner(getName, new org.apache.accumulo.core.security.Authorizations()).iterator).toSeq
   }
 }

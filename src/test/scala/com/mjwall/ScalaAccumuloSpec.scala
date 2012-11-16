@@ -4,9 +4,11 @@ import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 import org.scalatest.FunSpec
 import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.BeforeAndAfter
+
 
 @RunWith(classOf[JUnitRunner])
-class ScalaAccumuloSpec extends FunSpec with ShouldMatchers {
+class ScalaAccumuloSpec extends FunSpec with ShouldMatchers with BeforeAndAfter {
 
   describe("ScalaAccumulo") {
     describe("parseZookeepers") {
@@ -137,6 +139,58 @@ class ScalaAccumuloSpec extends FunSpec with ShouldMatchers {
         mockAccumulo.getInstance.isInstanceOf[org.apache.accumulo.core.client.mock.MockInstance] should be (true)
       }
     }
+
+    describe("getConnector") {
+      it("should return an Accumulo Connector") {
+        val mockAccumulo = ScalaAccumulo.getMock
+        mockAccumulo.getConnector.isInstanceOf[org.apache.accumulo.core.client.Connector] should be (true)
+      }
+    }
+
+    describe("tableExists") {
+      it("should return true if the table exists") {
+        val mockAccumulo: ScalaAccumulo = ScalaAccumulo.getMock
+        val tableName = "table1"
+        mockAccumulo.createTable(tableName)
+        mockAccumulo.tableExists(tableName) should be (true)
+      }
+
+      it("should return false if the table doesn't exist") {
+        val mockAccumulo: ScalaAccumulo = ScalaAccumulo.getMock
+        mockAccumulo.tableExists("inohere") should be (false)
+      }
+    }
+
+    describe("createTable with tableName") {
+      it("should create the table with just a tableName") {
+        val mockAccumulo: ScalaAccumulo = ScalaAccumulo.getMock
+        val tableName = "table1"
+        mockAccumulo.createTable(tableName)
+        mockAccumulo.getConnector.tableOperations().exists(tableName) should be (true)
+      }
+
+      it("should not error if the table exists") {
+        val mockAccumulo: ScalaAccumulo = ScalaAccumulo.getMock
+        val tableName = "table1"
+        mockAccumulo.createTable(tableName)
+        mockAccumulo.createTable(tableName)
+      }
+    }
+
+    describe("createTablew with tableName and limitVersion") {
+      it("should create the table") {
+        (pending)
+      }
+    }
+
+    describe("createTablew with tableName, versioningIter, and timeType") {
+      it("should create the table") {
+        (pending)
+      }
+    }
+
+
+
   }
 }
 

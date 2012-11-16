@@ -2,18 +2,21 @@ package com.mjwall
 
 import org.apache.accumulo.core.client.Instance
 import org.apache.accumulo.core.client.ZooKeeperInstance
+import org.apache.accumulo.core.client.Connector
 
 class ScalaAccumulo(instance: Instance, username: String, password: String) {
 
   val this.instance: Instance = instance //ZooKeeperInstance
   val this.username: String = username
   val this.password: String = password
+  private val connector: Connector = instance.getConnector(username, password)
 
   def getUsername: String = this.username
   def getPassword: String = this.password
   def getInstance: Instance = this.instance
+  def getConnector: Connector = this.connector
 
-  /*
+  /**
    * Auxillary constructor that creates a ZookeeperInstance based on the
    * instanceName and zookeepers string, along with a username, password
    *
@@ -22,7 +25,7 @@ class ScalaAccumulo(instance: Instance, username: String, password: String) {
     this(ScalaAccumulo.getZooKeeperInstance(instanceName, zookeepers, new ZKChecker()), username, password)
   }
 
-  /*
+  /**
    * Auxillary constructor that no arguments.   Assumes instance is accumulo, zookeepers
    * are running on localhost:2181 and the username/password is root/secret.
    */
@@ -40,23 +43,29 @@ class ScalaAccumulo(instance: Instance, username: String, password: String) {
     this(ScalaAccumulo.getZooKeeperInstance(instanceName, zookeepers, zkChecker), username, password)
   }
 
-  /*
+  /**
    * Auxillary constructor for testing that only takes a Zookeeper checker.  Assumes instance is
    * accumulo, zookeepers are running on localhost:2181 and the username/password
    * is root/secret.  Most people will want to use the empty constructor
    */
-  def this(zkChecker: ZKChecker) {
+  def this(zkChecker: ZKChecker) = {
     this(ScalaAccumulo.getZooKeeperInstance("accumulo","localhost", zkChecker),"root","secret")
   }
+
+  def createTable(tableName: String) = {
+    if(!tableExists(tableName)) {
+      getConnector.tableOperations().create(tableName)
+    }
+  }
+
+  def tableExists(tableName: String): Boolean = getConnector.tableOperations().exists(tableName)
 
   override def toString: String = "ScalaAccumulo connected to " + instance.getInstanceName + " on " + instance.getZooKeepers + " as " + username
 
 }
 
-case class ZookeeperPair(host: String, port: Int)
-
 object ScalaAccumulo {
-  /*
+  /**
    * This method checks that at least one of the zookeeper connections is open before trying to
    * get Accumulo's ZooKeeperInstance.  Trying to get a ZooKeeperInstance without checking will
    * just loop if Zookeeper is not running, which is really annoying.
@@ -69,7 +78,7 @@ object ScalaAccumulo {
     }
   }
 
-  /*
+  /**
    * This method checks that at least one of zookeeper connections is open before tyring to
    * get Accumulo's ZooKeeperInstance Trying to get a ZooKeeperInstance without checking will
    * just loop if Zookeeper is not running, which is really annoying.
@@ -89,13 +98,15 @@ object ScalaAccumulo {
     }
   }
 
-  /*
+  /**
    * Helper method to return a Mock Accumulo instance
    */
   def getMock() = {
     new ScalaAccumulo(new org.apache.accumulo.core.client.mock.MockInstance(),"root","secret")
   }
 }
+
+case class ZookeeperPair(host: String, port: Int)
 
 class ZKChecker extends java.net.Socket {
 
@@ -109,7 +120,6 @@ class ZKChecker extends java.net.Socket {
       this.close
     }
   }
-
 }
 
 

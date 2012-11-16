@@ -6,3 +6,16 @@ This is a work in progress, making a Scala wrapper for Accumulo.  Beside providi
 Although most of the Scala world uses SBT, I am attempting to do this with Maven.  I would imagine that most of the people using Accumulo are comfortable with Maven and I fear using SBT would hinder any possible use.
 
 Lots more to be done here, but it is a start.
+
+Example usage
+-------------
+
+Here is what I am trying to do
+
+val a = Accumulo()
+val test1 = a.createTable("test1") or a.table("test1")
+test1.write("a","b","c","d")
+test1.write("e","f","g","h")
+val rows = test1.scan
+row.map(_.getRowId) // Seq("a","e")
+a.deleteTable(test1) or a.deleteTable("test1")

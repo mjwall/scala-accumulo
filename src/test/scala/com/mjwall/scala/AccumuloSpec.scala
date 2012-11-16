@@ -169,11 +169,25 @@ class AccumuloSpec extends FunSpec with ShouldMatchers with BeforeAndAfter {
         mockAccumulo.getConnector.tableOperations().exists(tableName) should be (true)
       }
 
-      it("should not error if the table exists") {
+      it("should error if the table exists") {
         val mockAccumulo: Accumulo = Accumulo.getMock
         val tableName = "table1"
         mockAccumulo.createTable(tableName)
-        mockAccumulo.createTable(tableName)
+        try {
+          mockAccumulo.createTable(tableName)
+        } catch {
+          case e : org.apache.accumulo.core.client.TableExistsException => {
+            e.getMessage should equal ("Table table1 (Id="+tableName +") exists")
+          }
+          case e : Exception => {
+            fail("Wrong exception: " + e.getClass)
+          }
+        }
+      }
+
+      it("should return a Table object") {
+        val mockAccumulo: Accumulo = Accumulo.getMock
+        mockAccumulo.createTable("table1").getClass.getName should equal ("com.mjwall.scala.Table")
       }
     }
 

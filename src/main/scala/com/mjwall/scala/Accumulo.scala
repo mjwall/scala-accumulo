@@ -14,6 +14,11 @@ class Accumulo(instance: Instance, username: String, password: String) {
   def getUsername: String = this.username
   def getPassword: String = this.password
   def getInstance: Instance = this.instance
+
+  /**
+   * Returns the Accumulo Connector, which can be used for unimplemented
+   * functions using the Java API
+   */
   def getConnector: Connector = this.connector
 
   /**
@@ -53,9 +58,9 @@ class Accumulo(instance: Instance, username: String, password: String) {
   }
 
   def createTable(tableName: String) = {
-    if(!tableExists(tableName)) {
+   // if(!tableExists(tableName)) {
       getConnector.tableOperations().create(tableName)
-    }
+   // }
   }
 
   def tableExists(tableName: String): Boolean = getConnector.tableOperations().exists(tableName)
@@ -87,6 +92,11 @@ object Accumulo {
     getZooKeeperInstance(instance, zookeepers, new ZKChecker())
   }
 
+  /**
+   * Takes the list of comma seperated Zookeeper host:port info and
+   * returns a List of host/port pairs.  If the port is not defined in
+   * the original string, it is defaulted to 2181
+   */
   def parseZookeepers(zookeepers: String): List[ZookeeperPair] = {
     if ((null == zookeepers) || (zookeepers == "")) List()
     else {

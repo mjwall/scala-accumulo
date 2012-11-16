@@ -2,13 +2,14 @@ package com.mjwall.scala
 
 import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
-import org.scalatest.FunSpec
+//import org.scalatest.FunSpec
+import org.scalatest.path
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.BeforeAndAfter
 
 
 @RunWith(classOf[JUnitRunner])
-class AccumuloSpec extends FunSpec with ShouldMatchers with BeforeAndAfter {
+class AccumuloSpec extends path.FunSpec with ShouldMatchers {
 
   describe("Accumulo") {
     describe("parseZookeepers") {
@@ -148,30 +149,29 @@ class AccumuloSpec extends FunSpec with ShouldMatchers with BeforeAndAfter {
     }
 
     describe("tableExists") {
+      val mockAccumulo: Accumulo = Accumulo.getMock
+      val tableName = "table1"
+
       it("should return true if the table exists") {
-        val mockAccumulo: Accumulo = Accumulo.getMock
-        val tableName = "table1"
         mockAccumulo.createTable(tableName)
         mockAccumulo.tableExists(tableName) should be (true)
       }
 
       it("should return false if the table doesn't exist") {
-        val mockAccumulo: Accumulo = Accumulo.getMock
         mockAccumulo.tableExists("inohere") should be (false)
       }
     }
 
     describe("createTable with tableName") {
+      val mockAccumulo: Accumulo = Accumulo.getMock
+      val tableName = "table1"
+
       it("should create the table with just a tableName") {
-        val mockAccumulo: Accumulo = Accumulo.getMock
-        val tableName = "table1"
         mockAccumulo.createTable(tableName)
         mockAccumulo.getConnector.tableOperations().exists(tableName) should be (true)
       }
 
       it("should error if the table exists") {
-        val mockAccumulo: Accumulo = Accumulo.getMock
-        val tableName = "table1"
         mockAccumulo.createTable(tableName)
         try {
           mockAccumulo.createTable(tableName)
@@ -187,7 +187,6 @@ class AccumuloSpec extends FunSpec with ShouldMatchers with BeforeAndAfter {
       }
 
       it("should return a Table object") {
-        val mockAccumulo: Accumulo = Accumulo.getMock
         mockAccumulo.createTable("table1").getClass.getName should equal ("com.mjwall.scala.Table")
       }
     }
@@ -205,15 +204,15 @@ class AccumuloSpec extends FunSpec with ShouldMatchers with BeforeAndAfter {
     }
 
     describe("getTable") {
+      val mockAccumulo: Accumulo = Accumulo.getMock
+
       it("given a string for a table that exists should return Table") {
-        val mockAccumulo: Accumulo = Accumulo.getMock
         val tableName = "table1"
         mockAccumulo.createTable(tableName)
         mockAccumulo.getTable(tableName).getClass.getName should equal ("com.mjwall.scala.Table")
       }
 
       it("given a string for a table that does not exist should throw a TableNotFoundException") {
-        val mockAccumulo: Accumulo = Accumulo.getMock
         val tableName = "noexistheredude"
         try {
           mockAccumulo.getTable(tableName)

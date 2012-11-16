@@ -3,6 +3,10 @@ package com.mjwall.scala
 import org.apache.accumulo.core.client.Instance
 import org.apache.accumulo.core.client.ZooKeeperInstance
 import org.apache.accumulo.core.client.Connector
+import org.apache.hadoop.io.Text
+import org.apache.accumulo.core.data.Value
+import org.apache.accumulo.core.data.Mutation
+import scala.collection.JavaConverters._
 
 class Accumulo(instance: Instance, username: String, password: String) {
 
@@ -143,12 +147,15 @@ class Table(accumulo: Accumulo, name: String) {
   def getAccumulo: Accumulo = this.accumulo
   def getName: String = this.name
 
+  def write(rowId: String, cf: String, cq: String, v: String) = {
+    val batchWriter = this.getAccumulo.getConnector.createBatchWriter(getName, 1000L, 1000L, 1)
+    val mutation = new Mutation(new Text(rowId))
+    mutation.put(new Text(cf), new Text(cq), new Value(v.toCharArray.map(_.toByte)))
+    batchWriter.addMutation(mutation)
+    batchWriter.close
+  }
+
+  def find() = {
+    getAccumulo.getConnector.createScanner(getName, new org.apache.accumulo.core.security.Authorizations()).iterator.asScala.toSeq
+  }
 }
-
-
-
-
-
-
-
-

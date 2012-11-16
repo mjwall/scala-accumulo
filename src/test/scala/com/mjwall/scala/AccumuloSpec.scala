@@ -2,11 +2,10 @@ package com.mjwall.scala
 
 import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
-//import org.scalatest.FunSpec
 import org.scalatest.path
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.BeforeAndAfter
-
+import scala.collection.JavaConverters._
 
 @RunWith(classOf[JUnitRunner])
 class AccumuloSpec extends path.FunSpec with ShouldMatchers {
@@ -225,6 +224,41 @@ class AccumuloSpec extends path.FunSpec with ShouldMatchers {
             fail("Wrong exception: " + e.getClass)
           }
         }
+      }
+    }
+  }
+
+  describe("Table") {
+    val table1 = Accumulo.getMock.createTable("table1")
+
+    // some functions that will look almost like the implementation, but I am trying not
+    // to use the find/write methods in testing
+    def javaAPIWrite(table: Table, rowId: String, cf: String, cq: String, v: String) = {
+      import org.apache.hadoop.io.Text
+      import org.apache.accumulo.core.data.Value
+      val mutation = new org.apache.accumulo.core.data.Mutation(new Text(rowId))
+      mutation.put(new Text(cf), new Text(cq), new Value(v.toCharArray.map(_.toByte)))
+      val batchWriter = table.getAccumulo.getConnector.createBatchWriter(table.getName, 1000L, 1000L, 1)
+      batchWriter.addMutation(mutation)
+      batchWriter.close
+    }
+
+    def javaAPIScan(table: Table) = {
+      table.getAccumulo.getConnector.createScanner(table.getName, new org.apache.accumulo.core.security.Authorizations()).iterator.asScala.toSeq
+    }
+
+    describe("write") {
+      it("should write a rowId, cf, cq and value") {
+        table1.write("a", "b", "c", "value")
+        javaAPIScan(table1).size should equal (1)
+      }
+    }
+
+    describe("find") {
+      it("should return all rows for a given table") {
+        javaAPIWrite(table1, "a","a","a","a")
+        javaAPIWrite(table1, "b","b","c","c")
+        table1.find.size should equal (2)
       }
     }
   }

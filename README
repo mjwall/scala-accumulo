@@ -13,7 +13,7 @@ Example usage
 Here is what I am trying to do
 
 val a = Accumulo()
-val test1 = a.createTable("test1") or a.table("test1")
+val test1 = a.createTable("test1") or a.getTable("test1")
 test1.write("a","b","c","d")
 test1.write("e","f","g","h")
 val rows = test1.scan

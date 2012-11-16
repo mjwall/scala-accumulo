@@ -57,10 +57,16 @@ class Accumulo(instance: Instance, username: String, password: String) {
     this(Accumulo.getZooKeeperInstance("accumulo","localhost", zkChecker),"root","secret")
   }
 
-  def createTable(tableName: String) = {
-   // if(!tableExists(tableName)) {
-      getConnector.tableOperations().create(tableName)
-   // }
+  def createTable(tableName: String): Table = {
+    getConnector.tableOperations().create(tableName)
+    new Table(this, tableName)
+  }
+
+  def getTable(tableName: String): Table = {
+    if (!tableExists(tableName)) {
+      throw new org.apache.accumulo.core.client.TableNotFoundException(tableName, tableName, getInstance.getInstanceName)
+    }
+    new Table(this, tableName)
   }
 
   def tableExists(tableName: String): Boolean = getConnector.tableOperations().exists(tableName)
@@ -130,6 +136,13 @@ class ZKChecker extends java.net.Socket {
       this.close
     }
   }
+}
+
+class Table(accumulo: Accumulo, name: String) {
+
+  def getAccumulo: Accumulo = this.accumulo
+  def getName: String = this.name
+
 }
 
 

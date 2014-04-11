@@ -12,20 +12,34 @@
     <maven.compiler.source>1.6</maven.compiler.source>
     <maven.compiler.target>1.6</maven.compiler.target>
     <encoding>UTF-8</encoding>
-    <scala.version>2.9.2</scala.version>
-    <scalatest.version>2.0.M5</scalatest.version>
-    <accumulo.version>1.4.1</accumulo.version>
-    <hadoop.version>0.20.203.0</hadoop.version>
-    <zookeeper.version>3.3.3</zookeeper.version>
+    <scala.version>2.9.3</scala.version>
+    <scalatest.version>1.9.2</scalatest.version>
+    <accumulo.version>1.5.0</accumulo.version>
+    <hadoop.version>1.2.1</hadoop.version>
+    <zookeeper.version>3.4.6</zookeeper.version>
   </properties>
 
   <repositories>
+    <!--
     <repository>
       <id>scala-tools.org</id>
       <name>Scala-Tools Maven2 Repository</name>
       <url>https://oss.sonatype.org/content/groups/scala-tools</url>
     </repository>
-  </repositories>
+    -->
+    <repository>
+      <id>oss.sonatype.org</id>
+      <name>OSS Sonatype Maven2 Repository</name>
+      <url>https://oss.sonatype.org/content/groups/public</url>
+    </repository>
+    <!-- jmx:jmx:1.1 from zookeeper
+    <repository>
+      <id>repository.jboss.org-public</id>
+      <name>JBoss.org Maven repository</name>
+      <url>https://repository.jboss.org/nexus/content/groups/public</url>
+    </repository>
+    -->
+</repositories>
 
   <pluginRepositories>
     <pluginRepository>
@@ -44,7 +58,7 @@
 
     <!-- the next 3 dependencies are needed for the Console
          to run.  TODO: figure out a better way to build the
-         executable jar -->
+         executable jar
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-compiler</artifactId>
@@ -62,6 +76,8 @@
       <artifactId>jline</artifactId>
       <version>${scala.version}</version>
     </dependency>
+    -->
+
 
     <!-- Accumulo stuff -->
     <dependency>
@@ -86,21 +102,25 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.9</version>
+      <version>4.10</version>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>org.scalatest</groupId>
       <artifactId>scalatest_${scala.version}</artifactId>
       <version>${scalatest.version}</version>
       <scope>test</scope>
     </dependency>
+
+    <!--
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
       <version>1.9.5</version>
       <scope>test</scope>
     </dependency>
+    -->
   </dependencies>
 
   <build>
@@ -110,7 +130,7 @@
       <plugin>
         <groupId>net.alchim31.maven</groupId>
         <artifactId>scala-maven-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.1.6</version>
         <executions>
           <execution>
             <goals>
@@ -127,7 +147,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.7</version>
+        <version>2.17</version>
         <configuration>
           <skipTests>true</skipTests>
         </configuration>
@@ -136,7 +156,7 @@
       <plugin>
         <groupId>org.scalatest</groupId>
         <artifactId>scalatest-maven-plugin</artifactId>
-        <version>1.0-M2</version>
+        <version>1.0-RC2</version>
         <configuration>
           <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
           <junitxml>.</junitxml>
@@ -177,13 +197,14 @@
           </descriptorRefs>
         </configuration>
       </plugin>
+      <!-- mvn install from https://github.com/ueshin/ensime-maven-plugin
+           if you want to use it
       <plugin>
-        <!-- mvn install from https://github.com/ueshin/ensime-maven-plugin
-             if you want to use it -->
         <groupId>st.happy_camper.maven.plugins</groupId>
         <artifactId>ensime-maven-plugin</artifactId>
         <version>0.0.1</version>
       </plugin>
+      -->
     </plugins>
   </build>
 </project>

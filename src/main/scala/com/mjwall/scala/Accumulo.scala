@@ -55,7 +55,7 @@ class Accumulo(instance: Instance, username: String, password: String) {
   /**
    * Auxillary constructor for testing that only takes a Zookeeper checker.  Assumes instance is
    * accumulo, zookeepers are running on localhost:2181 and the username/password
-   * is root/secret.  Most people will want to use the empty constructor
+   * is root/secret.  Most people will want to use one of the other constructors
    */
   def this(zkChecker: ZKChecker) = {
     this(Accumulo.getZooKeeperInstance("accumulo","localhost", zkChecker),"root","secret")

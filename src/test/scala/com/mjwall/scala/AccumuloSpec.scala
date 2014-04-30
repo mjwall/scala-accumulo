@@ -1,14 +1,17 @@
 package com.mjwall.scala
 
-import org.scalatest.junit.JUnitRunner
-import org.junit.runner.RunWith
-import org.scalatest.path
 import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.BeforeAndAfter
 import scala.collection.JavaConverters._
+import org.scalatest.{FunSpec,BeforeAndAfterAll}
 
-@RunWith(classOf[JUnitRunner])
-class AccumuloSpec extends path.FunSpec with ShouldMatchers {
+class AccumuloSpec extends FunSpec with ShouldMatchers with BeforeAndAfterAll {
+  override def beforeAll() {
+    println("Setting up a MiniAccumuloCluster")
+  }
+
+  override def afterAll() {
+    println("Closing MiniAccumuloCluster")
+  }
 
   describe("Accumulo") {
     describe("parseZookeepers") {
@@ -42,83 +45,83 @@ class AccumuloSpec extends path.FunSpec with ShouldMatchers {
       }
     }
 
-    describe("against a live Accumulo") {
-      try {
-        val instanceName = "accumulo"
-        val zookeepers = "localhost"
-        val username = "root"
-        val password = "secret"
-        Accumulo.getZooKeeperInstance(instanceName, zookeepers)
-        // these tests will only run if you have accumulo running locally
-
-        describe("constructed with a ZooKeeperInstance, username and password") {
-          val zookeeperInstance = new org.apache.accumulo.core.client.ZooKeeperInstance(instanceName, zookeepers)
-          val scalaAccumulo = new Accumulo(zookeeperInstance, username, password)
-
-          it("should connect to ZooKeeperInstance") {
-            scalaAccumulo.getInstance should equal (zookeeperInstance)
-          }
-
-          it("should use the username") {
-            scalaAccumulo.getUsername should equal (username)
-          }
-
-          it("should use the password"){
-            scalaAccumulo.getPassword should equal (password)
-          }
-        }
-
-        describe("constructed with empty args") {
-          val scalaAccumulo = new Accumulo()
-
-          it("should connect to localhost") {
-            scalaAccumulo.getInstance match {
-              case i: org.apache.accumulo.core.client.ZooKeeperInstance => {
-                i.getZooKeepers.split(",").head should equal ("localhost")
-              }
-              case _ => fail("Instance was not a ZookeeperInstance")
-            }
-          }
-
-          it("should use 'root' as username") {
-            scalaAccumulo.getUsername should equal ("root")
-          }
-
-          it("should use 'secret' as password") {
-            scalaAccumulo.getPassword should equal ("secret")
-          }
-        }
-
-        describe("constructed with instanceName, zookeepers, username and password") {
-          val scalaAccumulo = new Accumulo(instanceName, zookeepers, username, password)
-
-          it("should connect to instanceName") {
-            scalaAccumulo.getInstance.getInstanceName should equal (instanceName)
-          }
-
-          it("should connect to zookeepers") {
-            scalaAccumulo.getInstance match {
-              case i: org.apache.accumulo.core.client.ZooKeeperInstance => {
-                i.getZooKeepers.split(",").head should equal ("localhost")
-              }
-              case _ => fail("Instance was not a ZookeeperInstance")
-            }
-          }
-
-          it("should use the username") {
-            scalaAccumulo.getUsername should equal ("root")
-          }
-
-          it("should use the password") {
-            scalaAccumulo.getPassword should equal ("secret")
-          }
-        }
-      } catch {
-        case e: java.net.SocketException => {
-          it("can not be run, as Accumulo doesn't appear to be running") (pending)
-        }
-      }
-    }
+//    describe("against a live Accumulo") {
+//      try {
+//        val instanceName = "accumulo"
+//        val zookeepers = "localhost"
+//        val username = "root"
+//        val password = "secret"
+//        Accumulo.getZooKeeperInstance(instanceName, zookeepers)
+//        // these tests will only run if you have accumulo running locally
+//
+//        describe("constructed with a ZooKeeperInstance, username and password") {
+//          val zookeeperInstance = new org.apache.accumulo.core.client.ZooKeeperInstance(instanceName, zookeepers)
+//          val scalaAccumulo = new Accumulo(zookeeperInstance, username, password)
+//
+//          it("should connect to ZooKeeperInstance") {
+//            scalaAccumulo.getInstance should equal (zookeeperInstance)
+//          }
+//
+//          it("should use the username") {
+//            scalaAccumulo.getUsername should equal (username)
+//          }
+//
+//          it("should use the password"){
+//            scalaAccumulo.getPassword should equal (password)
+//          }
+//        }
+//
+//        describe("constructed with empty args") {
+//          val scalaAccumulo = new Accumulo()
+//
+//          it("should connect to localhost") {
+//            scalaAccumulo.getInstance match {
+//              case i: org.apache.accumulo.core.client.ZooKeeperInstance => {
+//                i.getZooKeepers.split(",").head should equal ("localhost")
+//              }
+//              case _ => fail("Instance was not a ZookeeperInstance")
+//            }
+//          }
+//
+//          it("should use 'root' as username") {
+//            scalaAccumulo.getUsername should equal ("root")
+//          }
+//
+//          it("should use 'secret' as password") {
+//            scalaAccumulo.getPassword should equal ("secret")
+//          }
+//        }
+//
+//        describe("constructed with instanceName, zookeepers, username and password") {
+//          val scalaAccumulo = new Accumulo(instanceName, zookeepers, username, password)
+//
+//          it("should connect to instanceName") {
+//            scalaAccumulo.getInstance.getInstanceName should equal (instanceName)
+//          }
+//
+//          it("should connect to zookeepers") {
+//            scalaAccumulo.getInstance match {
+//              case i: org.apache.accumulo.core.client.ZooKeeperInstance => {
+//                i.getZooKeepers.split(",").head should equal ("localhost")
+//              }
+//              case _ => fail("Instance was not a ZookeeperInstance")
+//            }
+//          }
+//
+//          it("should use the username") {
+//            scalaAccumulo.getUsername should equal ("root")
+//          }
+//
+//          it("should use the password") {
+//            scalaAccumulo.getPassword should equal ("secret")
+//          }
+//        }
+//      } catch {
+//        case e: java.net.SocketException => {
+//          it("can not be run, as Accumulo doesn't appear to be running") (pending)
+//        }
+//      }
+//    }
 
     describe("when the zookeeper connection fails") {
       it("should give you a nice message") {
